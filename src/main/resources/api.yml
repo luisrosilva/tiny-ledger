@@ -1,0 +1,73 @@
+openapi: "3.0.0"
+info:
+  title: Tiny ledger API
+  description: Tiny ledger API.
+  version: 0.0.1
+paths:
+  /account:
+    get:
+      summary: List all accounts
+      operationId: listAccounts
+      tags:
+        - accounts
+      responses:
+        200:
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Account"
+    post:
+      summary: Create new account
+      operationId: createAccount
+      tags:
+        - accounts
+      responses:
+        200:
+          description: Account reference
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountReference"
+  /account/{accountId}:
+    get:
+      summary: Get specific account
+      operationId: getAccount
+      tags:
+        - accounts
+      parameters:
+        - name: accountId
+          in: path
+          description: "ID of the account to return"
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+
+components:
+  schemas:
+    AccountReference:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    Account:
+      type: object
+      required:
+        - id
+        - balance
+      properties:
+        id:
+          type: string
+        balance:
+          type: integer
