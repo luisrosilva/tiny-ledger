@@ -68,7 +68,7 @@ public class Account {
     }
 
     private boolean validateEnoughBalance(Long balance, Integer value) {
-        return balance < value;
+        return balance >= value;
     }
 
     public List<MoneyMovement> getMoneyMovements() {
