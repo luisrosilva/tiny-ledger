@@ -1,6 +1,8 @@
 package org.rosilva.tinyledger.service;
 
 import org.rosilva.tinyledger.domain.Account;
+import org.rosilva.tinyledger.domain.MoneyMovement;
+import org.rosilva.tinyledger.domain.MovementType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,11 +24,19 @@ public class AccountService {
         return newAccount;
     }
 
-    public Optional<Account> getAccount(String accountId) {
-        return Optional.ofNullable(accounts.get(UUID.fromString(accountId)));
+    public Optional<Account> getAccount(UUID accountId) {
+        return Optional.ofNullable(accounts.get(accountId));
     }
 
     public List<Account> getAccounts() {
         return new ArrayList<>(accounts.values());
+    }
+
+    public Optional<MoneyMovement> createMovement(Account account, Integer amount, MovementType movementType) {
+        return switch (movementType) {
+            case DEPOSIT -> account.deposit(amount);
+            case WITHDRAWAL -> account.withdraw(amount);
+            default -> Optional.empty();
+        };
     }
 }

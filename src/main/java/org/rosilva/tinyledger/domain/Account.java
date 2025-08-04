@@ -2,6 +2,7 @@ package org.rosilva.tinyledger.domain;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -10,6 +11,7 @@ public class Account {
     private final UUID id;
     private Long balance;
     private final ReadWriteLock lock;
+    private final List<MoneyMovement> moneyMovements = new LinkedList<>();
 
     public Account(Long openingBalance) {
         this.id = UUID.randomUUID();
@@ -25,25 +27,28 @@ public class Account {
         return id;
     }
 
-    public boolean deposit(Long value) {
-        if (!validateMoneyMovementValue(value)) return false;
-
+    public Optional<MoneyMovement> deposit(Integer value) {
+        if (!validateMoneyMovementValue(value)) return Optional.empty();
         try {
             this.lock.writeLock().lock();
             this.balance = this.balance + value;
-            return true;
+            MoneyMovement moneyMovement = new MoneyMovement(value, MovementType.DEPOSIT);
+            this.moneyMovements.add(moneyMovement);
+            return Optional.of(moneyMovement);
         } finally {
             this.lock.writeLock().unlock();
         }
     }
 
-    public boolean withdraw(Long value) {
-        if (!validateMoneyMovementValue(value)) return false;
+    public Optional<MoneyMovement> withdraw(Integer value) {
+        if (!validateMoneyMovementValue(value)) return Optional.empty();
         try {
             this.lock.writeLock().lock();
-            if (!validateEnoughBalance(this.balance, value)) return false;
+            if (!validateEnoughBalance(this.balance, value)) return Optional.empty();
             this.balance = this.balance - value;
-            return true;
+            MoneyMovement moneyMovement = new MoneyMovement(value, MovementType.WITHDRAWAL);
+            this.moneyMovements.add(moneyMovement);
+            return Optional.of(moneyMovement);
         } finally {
             this.lock.writeLock().unlock();
         }
@@ -58,11 +63,20 @@ public class Account {
         }
     }
 
-    private boolean validateMoneyMovementValue(Long value) {
-        return value <= 0;
+    private boolean validateMoneyMovementValue(Integer value) {
+        return value >= 0;
     }
 
-    private boolean validateEnoughBalance(Long balance, Long value) {
+    private boolean validateEnoughBalance(Long balance, Integer value) {
         return balance < value;
+    }
+
+    public List<MoneyMovement> getMoneyMovements() {
+        try {
+            this.lock.readLock().lock();
+            return List.of(this.moneyMovements.toArray(MoneyMovement[]::new));
+        } finally {
+            this.lock.readLock().unlock();
+        }
     }
 }

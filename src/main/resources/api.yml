@@ -46,11 +46,74 @@ paths:
             type: string
       responses:
         200:
-          description: List of accounts
+          description: Account
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
+        404:
+          description: Account not found.
+  /account/{accountId}/movement:
+    post:
+      summary: Create a money movement on an account.
+      operationId: createMovement
+      tags:
+        - accounts
+      parameters:
+        - name: accountId
+          in: path
+          description: "ID of the account"
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: Value for the money movement
+          schema:
+            type: integer
+        - name: type
+          in: query
+          description: Type of the money movement
+          schema:
+            type: string
+            enum:
+              - DEPOSIT
+              - WITHDRAWAL
+      responses:
+        200:
+          description: Created money movement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MoneyMovement"
+        400:
+          description: Validation error.
+        404:
+          description: Account not found.
+    get:
+      summary: List account movements.
+      operationId: listMovements
+      tags:
+        - accounts
+      parameters:
+        - name: accountId
+          in: path
+          description: "ID of the account"
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of movements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MoneyMovement"
+        404:
+          description: Account not found.
+
 
 components:
   schemas:
@@ -71,3 +134,24 @@ components:
           type: string
         balance:
           type: integer
+    MoneyMovement:
+      type: object
+      required:
+        - type
+        - value
+      properties:
+        id:
+          type: string
+        amount:
+          type: integer
+        type:
+          type: string
+          enum:
+            - DEPOSIT
+            - WITHDRAWAL
+        createdAt:
+          type: string
+          format: date-time
+        effectedAt:
+          type: string
+          format: date-time
