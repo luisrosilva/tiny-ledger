@@ -85,9 +85,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<!-- This just needs to be commented out because intellij incorrectly picks up generated tests as src
-			and not test-src.  -->
-<!--			<scope>test</scope>-->
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -136,15 +134,13 @@
 							<generatorName>spring</generatorName>
 							<apiPackage>org.rosilva.tinyledger.api</apiPackage>
 							<modelPackage>org.rosilva.tinyledger.api.model</modelPackage>
-<!--							<supportingFilesToGenerate>-->
-<!--								ApiUtil.java-->
-<!--							</supportingFilesToGenerate>-->
 							<configOptions>
 								<serializableModel>true</serializableModel>
 								<useSpringBoot3>true</useSpringBoot3>
 								<useJakartaEe>true</useJakartaEe>
 								<delegatePattern>false</delegatePattern>
 								<interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
 								<useSpringController>true</useSpringController>
 							</configOptions>
 						</configuration>

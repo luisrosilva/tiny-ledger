@@ -7,6 +7,7 @@ import org.rosilva.tinyledger.mappers.AccountMapper;
 import org.rosilva.tinyledger.mappers.MoneyMovementMapper;
 import org.rosilva.tinyledger.mappers.MovementTypeMapper;
 import org.rosilva.tinyledger.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -26,8 +27,8 @@ public class AccountApiImpl implements AccountApi {
         this.accountService = accountService;
     }
 
-    @Override
     public Optional<NativeWebRequest> getRequest() {
+        // Exposes native request and response objects, making it available in case of need.
         return Optional.ofNullable(nativeWebRequest);
     }
 
