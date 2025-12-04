@@ -134,14 +134,15 @@
 							<generatorName>spring</generatorName>
 							<apiPackage>org.rosilva.tinyledger.api</apiPackage>
 							<modelPackage>org.rosilva.tinyledger.api.model</modelPackage>
+                            <skipOperationExample>true</skipOperationExample>
 							<configOptions>
 								<serializableModel>true</serializableModel>
 								<useSpringBoot3>true</useSpringBoot3>
 								<useJakartaEe>true</useJakartaEe>
 								<delegatePattern>false</delegatePattern>
 								<interfaceOnly>true</interfaceOnly>
-                                <skipDefaultInterface>true</skipDefaultInterface>
 								<useSpringController>true</useSpringController>
+                                <generateBuilders>true</generateBuilders>
 							</configOptions>
 						</configuration>
 					</execution>
